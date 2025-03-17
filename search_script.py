@@ -33,15 +33,12 @@ async def test_text_search(request) -> None:
         context = await browser.new_context()
         page = await context.new_page()
 
-        # nogtips検索処理
-        await page.goto("https://nogtips.wordpress.com", wait_until='domcontentloaded', timeout=30000)
-        await page.get_by_role("button", name="閉じて承認").click()
-        await page.get_by_role("link", name="nogtips").click()
-        await page.get_by_role("heading", name="Personal AI Assistant（PAIA）を作る").get_by_role("link").click()
-        await page.get_by_role("link", name="bykilt", exact=True).click()
-        await page.get_by_role("searchbox", name="検索:").click()
-        await page.get_by_role("searchbox", name="検索:").fill(query)
-        await page.get_by_role("searchbox", name="検索:").press("Enter")
+        # Yahoo検索処理
+        await page.goto("https://www.yahoo.co.jp/")
+        await page.get_by_role("searchbox", name="検索したいキーワードを入力してください").click()
+        await page.get_by_role("searchbox", name="検索したいキーワードを入力してください").fill(query)
+        await page.get_by_role("button", name="検索").click()
+        await page.locator("#contents").click()
 
         await page.wait_for_timeout(10000)
 
