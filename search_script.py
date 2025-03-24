@@ -40,7 +40,7 @@ async def test_text_search(request) -> None:
         await page.get_by_role("button", name="検索").click()
         await page.locator("#contents").click()
 
-        await page.wait_for_timeout(10000)
+        await page.wait_for_timeout(3000)
 
         await context.close()
         await browser.close()
