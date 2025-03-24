@@ -27,11 +27,12 @@ def pytest_addoption(parser):
 @pytest.fixture(scope="function")
 async def browser_fixture(request):
     # スローモーション設定の取得（bykilt-slowmoが優先）
-    slowmo = request.config.getoption("--bykilt-slowmo")
+    slowmo = request.config.getoption("--bykilt-slowmo", default=0)
     if slowmo == 0:
-        slowmo = request.config.getoption("--slowmo")
+        slowmo = request.config.getoption("--slowmo", default=0)
     
-    headless = request.config.getoption("--headless")
+    # デフォルト値を設定
+    headless = request.config.getoption("--headless", default=False)
     
     # PlaywrightとBrowserを初期化
     playwright = await async_playwright().start()
