@@ -1,4 +1,4 @@
-# search_script.py 
+# search_script_music.py 
 import pytest
 from playwright.async_api import async_playwright, Page, expect
 import asyncio
@@ -11,15 +11,34 @@ def pytest_addoption(parser):
     parser.addoption("--slowmo", action="store", type=int, default=0, help="Slow motion delay in milliseconds")
 
 @pytest.mark.asyncio  # This mark will now be recognized
-async def test_beatport_search(request) -> None:
+async def test_text_search(request) -> None:
     query = request.config.getoption("--query")
     slowmo = request.config.getoption("--slowmo")
     if not query:
         pytest.skip("No query provided. Use --query to specify a search term.")
 
+    # 録画ディレクトリの設定（環境変数から取得するか、デフォルト値を使用）
+    recording_dir = os.environ.get("RECORDING_PATH", "./tmp/record_videos")
+    os.makedirs(recording_dir, exist_ok=True)  # ディレクトリが存在しない場合は作成
+    
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=slowmo)
-        context = await browser.new_context()
+        browser = await p.chromium.launch(
+            headless=False, 
+            slow_mo=slowmo, 
+            args=[
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--no-zygote',
+                '--single-process'
+            ]
+        )  
+        # 録画オプションを指定してコンテキストを作成
+        context = await browser.new_context(
+            record_video_dir=recording_dir,
+            record_video_size={"width": 1280, "height": 720}  # 録画解像度
+        )
         page = await context.new_page()
 
         # Beatport検索とTop10の連続再生
@@ -36,4 +55,4 @@ async def test_beatport_search(request) -> None:
         await browser.close()
 
 if __name__ == "__main__":
-    asyncio.run(test_beatport_search(None))
+    asyncio.run(test_text_search(None))

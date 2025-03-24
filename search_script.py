@@ -17,6 +17,10 @@ async def test_text_search(request) -> None:
     if not query:
         pytest.skip("No query provided. Use --query to specify a search term.")
 
+    # 録画ディレクトリの設定（環境変数から取得するか、デフォルト値を使用）
+    recording_dir = os.environ.get("RECORDING_PATH", "./tmp/record_videos")
+    os.makedirs(recording_dir, exist_ok=True)  # ディレクトリが存在しない場合は作成
+    
     async with async_playwright() as p:
         browser = await p.chromium.launch(
             headless=False, 
@@ -30,7 +34,11 @@ async def test_text_search(request) -> None:
                 '--single-process'
             ]
         )  
-        context = await browser.new_context()
+        # 録画オプションを指定してコンテキストを作成
+        context = await browser.new_context(
+            record_video_dir=recording_dir,
+            record_video_size={"width": 1280, "height": 720}  # 録画解像度
+        )
         page = await context.new_page()
 
         # nogtips検索処理
