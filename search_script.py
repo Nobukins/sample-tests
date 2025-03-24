@@ -43,7 +43,7 @@ async def test_text_search(request) -> None:
 
         # nogtips検索処理
         await page.goto("https://nogtips.wordpress.com", wait_until='domcontentloaded', timeout=30000)
-        await page.get_by_role("button", name="閉じて承認").click()
+        # await page.get_by_role("button", name="閉じて承認").click()
         await page.get_by_role("link", name="nogtips").click()
         await page.get_by_role("heading", name="Personal AI Assistant（PAIA）を作る").get_by_role("link").click()
         await page.get_by_role("link", name="bykilt", exact=True).click()

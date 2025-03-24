@@ -42,12 +42,12 @@ async def test_text_search(request) -> None:
         page = await context.new_page()
 
         # Beatport検索とTop10の連続再生
-        await page.goto("https://www.beatport.com/")
+        await page.goto("https://musicsite/")
         await page.get_by_role("button", name="I Accept").click()
         await page.get_by_test_id("header-search-input").click()
         await page.get_by_test_id("header-search-input").fill(query)
-        await page.goto("https://www.beatport.com/genre/minimal-deep-tech/14")
-        await page.locator(".CollectionControls-style__Controls-sc-3a6a5b4a-0 > .Play-style__Control-sc-bdba3bac-0").first.click()
+        await page.goto("https://musicsite/genre/minimal")
+        await page.locator(".XXXX-XXXX-XXXX > .XXXXX-XXXXX-XXXX").first.click()
 
         await page.wait_for_timeout(10000)
 
